@@ -16,7 +16,7 @@ var maxRenderDistance = 1000;
 // 初始化 3D 场景
 function initScene() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(fov, widthHeightRatio, minRenderDistance, maxRenderDistance);
+    camera = new THREE.PerspectiveCamera(fov, widthHeightRatio, minRenderDistance,maxRenderDistance);
     camera.position.set(0, 0, 0.1); // 摄像机位于立方体内部中心
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -33,36 +33,32 @@ function initScene() {
 function createVideoTileBox(tileUrls) {
     var geometry = new THREE.BoxGeometry(1, 1, 1); // 创建立方体几何体
     var materials = []; // 存储每个面的材质
-    var masterPlayer = null; // 主播放器，用于同步其他播放器
 
     for (var i = 0; i < tileUrls.length; i++) {
         var video = document.createElement('video');
-        video.crossOrigin = 'anonymous'; // 支持跨域请求
-        video.autoplay = true;          // 自动播放
-        video.muted = true;             // 视频静音
-        video.loop = false;             // 直播流通常不需要循环播放
+        // 支持跨域请求
+        video.crossOrigin = 'anonymous';
+        // 自动播放
+        video.autoplay = true;
+        // 视频静音
+        video.muted = true;
+        video.loop = false;
 
         var dashPlayer = dashjs.MediaPlayer().create();
+        // 第三个参数 true 表示启用自动播放
         dashPlayer.initialize(video, tileUrls[i], true);
         dashPlayers.push(dashPlayer);
 
-        if (i === 0) {
-            // 第一个播放器作为主播放器
-            masterPlayer = dashPlayer;
-        } else {
-            // 为其他播放器设置同步
-            dashPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_TIME_UPDATED, function () {
-                synchronizePlayers(masterPlayer, dashPlayer);
-            });
-        }
-
         // 创建视频纹理
         var texture = new THREE.VideoTexture(video);
-        texture.minFilter = THREE.LinearFilter; // 设置纹理的最小过滤器
-        texture.wrapS = THREE.ClampToEdgeWrapping; // 设置纹理在 S 方向上的重复方式
-        texture.wrapT = THREE.ClampToEdgeWrapping; // 设置纹理在 T 方向上的重复方式
+        // 设置纹理的最小过滤器，影响纹理缩小时的效果
+        texture.minFilter = THREE.LinearFilter;
+        // 设置纹理在 S 和 T 方向（即 x 和 y 轴）上的重复方式，ClampToEdgeWrapping 表示纹理不重复，边缘部分被拉伸
+        texture.wrapS = THREE.ClampToEdgeWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
 
-        var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }); // 双面渲染
+        // 双面渲染
+        var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
         materials.push(material);
     }
 
@@ -70,24 +66,6 @@ function createVideoTileBox(tileUrls) {
     var cube = new THREE.Mesh(geometry, materials);
     cube.geometry.scale(1, 1, -1); // 反转几何体，使摄像机位于立方体内部
     scene.add(cube);
-}
-
-// 同步播放器
-function synchronizePlayers(masterPlayer, slavePlayer) {
-    if (!masterPlayer || !slavePlayer) return;
-
-    // 获取主播放器和从播放器的当前时间
-    var masterTime = masterPlayer.time();
-    var slaveTime = slavePlayer.time();
-
-    // 计算时间差
-    var timeDifference = masterTime - slaveTime;
-
-    // 如果时间差超过阈值，则调整从播放器
-    var syncThreshold = 0.1; // 0.5秒为同步阈值
-    if (Math.abs(timeDifference) > syncThreshold) {
-        slavePlayer.seek(masterTime); // 调整从播放器到主播放器的时间
-    }
 }
 
 // 动画渲染
@@ -117,4 +95,4 @@ function init() {
     animate();
 }
 
-init();
+init(); // 启动应用
