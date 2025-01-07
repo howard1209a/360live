@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tile-based 360° Video with MPEG-DASH</title>
+
+    <!-- 引入 Dash.js -->
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+    <!-- 引入 THREE.js OrbitControls.js Dash.js -->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+          }
+        }
+    </script>
+
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container"></div>
+
+    <!-- 引入外部 JavaScript 文件 -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
