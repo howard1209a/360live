@@ -80,14 +80,37 @@ function synchronizePlayers(masterPlayer, slavePlayer) {
     var masterTime = masterPlayer.time();
     var slaveTime = slavePlayer.time();
 
-    // 计算时间差
+    // 计算时间差，考虑 availabilityStartTime
     var timeDifference = masterTime - slaveTime;
 
     // 如果时间差超过阈值，则调整从播放器
-    var syncThreshold = 0.1; // 0.5秒为同步阈值
+    var syncThreshold = 0.5; // 0.1秒为同步阈值
     if (Math.abs(timeDifference) > syncThreshold) {
-        slavePlayer.seek(masterTime); // 调整从播放器到主播放器的时间
+        console.log("masterTime: "+masterTime+"|slaveTime: "+slaveTime)
+        slavePlayer.seek(masterTime); // 调整从播放器时间
     }
+}
+
+var count = 0;
+
+// 定时打印所有播放器的时间戳（在同一行）
+function printPlayerTimestamps() {
+    setInterval(function() {
+        count++;
+        if(count == 5) {
+            for(var i=0;i<6;i++) {
+                dashPlayers[i].seek(1);
+            }
+        }
+
+        // 输出所有播放器的时间戳
+        var timestamps = dashPlayers.map(function(player, index) {
+            return `Player ${index + 1}: ${player.time().toFixed(2)}s`;
+        }).join(' | ');
+
+        // 打印所有时间戳
+        console.log(timestamps);
+    }, 1000); // 每秒打印一次
 }
 
 // 动画渲染
@@ -113,6 +136,9 @@ function init() {
 
     // 创建立方体视频瓦片
     createVideoTileBox(tileUrls);
+
+    // 开始定时打印播放器时间戳
+    printPlayerTimestamps();
 
     animate();
 }
