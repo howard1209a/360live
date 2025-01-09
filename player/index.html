@@ -1,29 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Tile-based 360° Video with MPEG-DASH</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A-Frame VR Video Tiles</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- 设置场景背景 -->
+      <a-sky color="#ECECEC"></a-sky>
 
-    <!-- 引入 Dash.js -->
-    <script src="../dash.js/dist/dash.all.debug.js"></script>
+      <!-- 创建一个包含视频瓦片的立方体 -->
+      <a-entity id="video-tiles" position="0 0 0" rotation="0 0 0">
+        <!-- 使用 <a-box> 来创建一个立方体 -->
+        <a-box id="video-box" width="1" height="1" depth="1" position="0 0 0">
+          <!-- video-1 和 video-2 这两个面将双面渲染 -->
+          <a-plane id="video-1" material="src: #video-1; side: double" position="0 0 0.5" rotation="0 180 0" width="1" height="1"></a-plane>
+          <a-plane id="video-2" material="src: #video-2; side: double" position="0 0 -0.5" rotation="0 0 0" width="1" height="1"></a-plane>
 
-    <!-- 引入 THREE.js OrbitControls.js Dash.js -->
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
-          }
-        }
-    </script>
+          <!-- 其他面可以继续使用正常的渲染方式 -->
+          <a-plane id="video-3" material="src: #video-3" position="-0.5 0 0" rotation="0 90 0" width="1" height="1"></a-plane>
+          <a-plane id="video-4" material="src: #video-4" position="0.5 0 0" rotation="0 -90 0" width="1" height="1"></a-plane>
+          <a-plane id="video-5" material="src: #video-5" position="0 0.5 0" rotation="90 0 0" width="1" height="1"></a-plane>
+          <a-plane id="video-6" material="src: #video-6" position="0 -0.5 0" rotation="-90 0 0" width="1" height="1"></a-plane>
+        </a-box>
+      </a-entity>
 
-    <!-- 引入外部 CSS 文件 -->
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="container"></div>
+      <!-- 将摄像机放置在立方体的中心 -->
+      <a-camera position="0 0 0" rotation="0 0 0"></a-camera>
+    </a-scene>
 
-    <!-- 引入外部 JavaScript 文件 -->
-    <script type="module" src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
