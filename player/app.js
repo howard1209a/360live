@@ -1,11 +1,11 @@
 // 视频 URL 地址
 var tileUrls = [
-    'http://10.29.160.99:8080/data/dash_output6/output.mpd',
-    'http://10.29.160.99:8080/data/dash_output5/output.mpd',
-    'http://10.29.160.99:8080/data/dash_output2/output.mpd',
-    'http://10.29.160.99:8080/data/dash_output1/output.mpd',
-    'http://10.29.160.99:8080/data/dash_output3/output.mpd',
-    'http://10.29.160.99:8080/data/dash_output4/output.mpd',
+    'https://10.29.160.99/data/dash_output6/output.mpd',
+    'https://10.29.160.99/data/dash_output5/output.mpd',
+    'https://10.29.160.99/data/dash_output2/output.mpd',
+    'https://10.29.160.99/data/dash_output1/output.mpd',
+    'https://10.29.160.99/data/dash_output3/output.mpd',
+    'https://10.29.160.99/data/dash_output4/output.mpd',
 ];
 
 var dashPlayers = [];
@@ -42,35 +42,9 @@ function initializeDashPlayers() {
     });
 }
 
-// 同步播放：让从播放器与主播放器时间同步
-function synchronizePlayers(masterPlayer, slavePlayer) {
-    if (!masterPlayer || !slavePlayer) return;
-
-    // 获取主播放器和从播放器的当前时间
-    var masterTime = masterPlayer.time();
-    var slaveTime = slavePlayer.time();
-
-    // 计算时间差
-    var timeDifference = masterTime - slaveTime;
-
-    // 如果时间差超过阈值，则调整从播放器的时间
-    var syncThreshold = 0.5; // 0.5秒为同步阈值
-    if (Math.abs(timeDifference) > syncThreshold) {
-        slavePlayer.seek(masterTime); // 调整从播放器时间
-        console.log(`Synchronizing: masterTime ${masterTime.toFixed(2)}s | slaveTime ${slaveTime.toFixed(2)}s`);
-    }
-}
-
 // 定时打印所有播放器的时间戳（在同一行）
 function printPlayerTimestamps() {
     setInterval(function () {
-        count++;
-        if (count === 1) {
-            for (var i = 0; i < 6; i++) {
-                dashPlayers[i].seek(1);
-            }
-        }
-
         // 输出所有播放器的时间戳
         var timestamps = dashPlayers.map(function (player, index) {
             return `Player ${index + 1}: ${player.time().toFixed(2)}s`;
@@ -85,4 +59,8 @@ function printPlayerTimestamps() {
 window.onload = function () {
     initializeDashPlayers();
     printPlayerTimestamps();
+
+    for (var i = 0; i < 6; i++) {
+        dashPlayers[i].seek(1);
+    }
 };
