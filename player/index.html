@@ -16,21 +16,21 @@
       <!-- 创建一个包含视频瓦片的立方体 -->
       <a-entity id="video-tiles" position="0 0 0" rotation="0 0 0">
         <!-- 使用 <a-box> 来创建一个立方体 -->
-        <a-box id="video-box" width="1" height="1" depth="1" position="0 0 0">
+        <a-box id="video-box" width="10" height="10" depth="10" position="0 0 0">
           <!-- video-1 和 video-2 这两个面将双面渲染 -->
-          <a-plane id="video-1" material="src: #video-1; side: double" position="0 0 0.5" rotation="0 180 0" width="1" height="1"></a-plane>
-          <a-plane id="video-2" material="src: #video-2; side: double" position="0 0 -0.5" rotation="0 0 0" width="1" height="1"></a-plane>
+          <a-plane id="video-1" material="src: #video-1; side: double" position="0 0 5" rotation="0 180 0" width="10" height="10"></a-plane>
+          <a-plane id="video-2" material="src: #video-2; side: double" position="0 0 -5" rotation="0 0 0" width="10" height="10"></a-plane>
 
           <!-- 其他面可以继续使用正常的渲染方式 -->
-          <a-plane id="video-3" material="src: #video-3" position="-0.5 0 0" rotation="0 90 0" width="1" height="1"></a-plane>
-          <a-plane id="video-4" material="src: #video-4" position="0.5 0 0" rotation="0 -90 0" width="1" height="1"></a-plane>
-          <a-plane id="video-5" material="src: #video-5" position="0 0.5 0" rotation="90 0 0" width="1" height="1"></a-plane>
-          <a-plane id="video-6" material="src: #video-6" position="0 -0.5 0" rotation="-90 0 0" width="1" height="1"></a-plane>
+          <a-plane id="video-3" material="src: #video-3" position="-5 0 0" rotation="0 90 0" width="10" height="10"></a-plane>
+          <a-plane id="video-4" material="src: #video-4" position="5 0 0" rotation="0 -90 0" width="10" height="10"></a-plane>
+          <a-plane id="video-5" material="src: #video-5" position="0 5 0" rotation="90 0 0" width="10" height="10"></a-plane>
+          <a-plane id="video-6" material="src: #video-6" position="0 -5 0" rotation="-90 0 0" width="10" height="10"></a-plane>
         </a-box>
       </a-entity>
 
       <!-- 将摄像机放置在立方体的中心 -->
-      <a-camera position="0 0 0" rotation="0 0 0"></a-camera>
+      <a-camera position="0 0 0" rotation="0 0 0" wasd-controls="enabled: true;" vive-controls="hand: left; button: trigger"></a-camera>
     </a-scene>
 
     <script src="app.js"></script>

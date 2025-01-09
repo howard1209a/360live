@@ -44,7 +44,16 @@ function initializeDashPlayers() {
 
 // 定时打印所有播放器的时间戳（在同一行）
 function printPlayerTimestamps() {
+    var count=0;
+
     setInterval(function () {
+        count++;
+        if(count==2) {
+            for (var i = 0; i < 6; i++) {
+                dashPlayers[i].seek(1);
+            }
+        }
+
         // 输出所有播放器的时间戳
         var timestamps = dashPlayers.map(function (player, index) {
             return `Player ${index + 1}: ${player.time().toFixed(2)}s`;
@@ -59,8 +68,4 @@ function printPlayerTimestamps() {
 window.onload = function () {
     initializeDashPlayers();
     printPlayerTimestamps();
-
-    for (var i = 0; i < 6; i++) {
-        dashPlayers[i].seek(1);
-    }
 };
