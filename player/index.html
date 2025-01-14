@@ -1,38 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A-Frame VR Video Tiles</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://10.29.160.99/360live/libs/1.2.0-aframe.min.js"></script>
-    <script src="https://10.29.160.99/360live/libs/dash.all.min.js"></script>
-  </head>
-  <body>
-    <a-scene>
-      <!-- 设置场景背景 -->
-      <a-sky color="#ECECEC"></a-sky>
 
-      <!-- 创建一个包含视频瓦片的立方体 -->
-      <a-entity id="video-tiles" position="0 0 0" rotation="0 0 0">
-        <!-- 使用 <a-box> 来创建一个立方体 -->
-        <a-box id="video-box" width="10" height="10" depth="10" position="0 0 0">
-          <!-- video-1 和 video-2 这两个面将双面渲染 -->
-          <a-plane id="video-1" material="src: #video-1; side: double" position="0 0 5" rotation="0 180 0" width="10" height="10"></a-plane>
-          <a-plane id="video-2" material="src: #video-2; side: double" position="0 0 -5" rotation="0 0 0" width="10" height="10"></a-plane>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A-Frame VR Video Tiles</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://10.29.160.99/360live/libs/1.2.0-aframe.min.js"></script>
+  <script src="https://10.29.160.99/360live/dash.js/dist/dash.all.debug.js"></script>
+</head>
 
-          <!-- 其他面可以继续使用正常的渲染方式 -->
-          <a-plane id="video-3" material="src: #video-3" position="-5 0 0" rotation="0 90 0" width="10" height="10"></a-plane>
-          <a-plane id="video-4" material="src: #video-4" position="5 0 0" rotation="0 -90 0" width="10" height="10"></a-plane>
-          <a-plane id="video-5" material="src: #video-5" position="0 5 0" rotation="90 0 0" width="10" height="10"></a-plane>
-          <a-plane id="video-6" material="src: #video-6" position="0 -5 0" rotation="-90 0 0" width="10" height="10"></a-plane>
-        </a-box>
-      </a-entity>
+<body>
+  <div class="container">
+    <!-- 左侧布局 -->
+    <div class="left-panel">
+      <div class="top-bar">
+        <input type="text" id="stream-path" placeholder="输入直播流路径" />
+        <button id="show-options">Show Options</button>
+        <button id="load">Load</button>
+      </div>
 
-      <!-- 将摄像机放置在立方体的中心 -->
-      <a-camera position="0 0 0" rotation="0 0 0" wasd-controls="enabled: true;" vive-controls="hand: left; button: trigger"></a-camera>
-    </a-scene>
+      <div class="middle-panel">
+        <a-scene id="vr-scene" embedded>
+          <a-sky color="#ECECEC"></a-sky>
+          <a-entity id="video-tiles" position="0 0 0" rotation="0 0 0">
+            <a-box id="video-box" width="10" height="10" depth="10" position="0 0 0">
+              <a-plane id="video-1" material="src: #video-1; side: double" position="0 0 5" rotation="0 180 0"
+                width="10" height="10"></a-plane>
+              <a-plane id="video-2" material="src: #video-2; side: double" position="0 0 -5" rotation="0 0 0" width="10"
+                height="10"></a-plane>
+              <a-plane id="video-3" material="src: #video-3" position="-5 0 0" rotation="0 90 0" width="10"
+                height="10"></a-plane>
+              <a-plane id="video-4" material="src: #video-4" position="5 0 0" rotation="0 -90 0" width="10"
+                height="10"></a-plane>
+              <a-plane id="video-5" material="src: #video-5" position="0 5 0" rotation="90 0 0" width="10"
+                height="10"></a-plane>
+              <a-plane id="video-6" material="src: #video-6" position="0 -5 0" rotation="-90 0 0" width="10"
+                height="10"></a-plane>
+            </a-box>
+          </a-entity>
+          <a-camera position="0 0 0" rotation="0 0 0" wasd-controls="enabled: true;"
+            vive-controls="hand: left; button: trigger"></a-camera>
+        </a-scene>
+      </div>
 
-    <script src="app.js"></script>
-  </body>
+      <div class="bottom-bar">
+        <button id="pause">pause</button>
+        <button id="fullScreen">full screen</button>
+        <div id="buffer-length">buffer</div>
+        <div id="live-status">
+          <span id="live-status-text">live</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧布局 -->
+    <div class="right-panel">
+      <h3>bitrate</h3>
+      <p>tile1: <span id="bitrate-1">Bitrate: N/A</span></p>
+      <p>tile2: <span id="bitrate-2">Bitrate: N/A</span></p>
+      <p>tile3: <span id="bitrate-3">Bitrate: N/A</span></p>
+      <p>tile4: <span id="bitrate-4">Bitrate: N/A</span></p>
+      <p>tile5: <span id="bitrate-5">Bitrate: N/A</span></p>
+      <p>tile6: <span id="bitrate-6">Bitrate: N/A</span></p>
+    </div>
+
+    <div class="right-panel">
+      <h3>buffer length</h3>
+      <p>tile1: <span id="buffer-1">0 s</span>
+      <p>tile2: <span id="buffer-2">0 s</span>
+      <p>tile3: <span id="buffer-3">0 s</span>
+      <p>tile4: <span id="buffer-4">0 s</span>
+      <p>tile5: <span id="buffer-5">0 s</span>
+      <p>tile6: <span id="buffer-6">0 s</span>
+    </div>
+
+    <div class="right-panel">
+      <h3>rebuffer time</h3>
+      <p>tile1: <span id="rebuffer-1">0 s</span></p>
+      <p>tile2: <span id="rebuffer-2">0 s</span></p>
+      <p>tile3: <span id="rebuffer-3">0 s</span></p>
+      <p>tile4: <span id="rebuffer-4">0 s</span></p>
+      <p>tile5: <span id="rebuffer-5">0 s</span></p>
+      <p>tile6: <span id="rebuffer-6">0 s</span></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
 </html>
